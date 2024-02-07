@@ -1,22 +1,24 @@
-name: Auto-Merge to Private Repo
+name: Create PR to repo-private
 
 on:
   push:
     branches:
-      - main  # Adjust the branch name as needed
+      - main  # Adjust the branch name as per your requirement
 
 jobs:
-  auto-merge:
+  create_pr:
     runs-on: ubuntu-latest
-
+    
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-
-      - name: Create pull request in repo-private
-        run: |
-          # Use GitHub CLI or API to create a pull request in repo-private
-          # Example:
-          gh pr create --base main --head main --title "Auto-Merge from repo-public" --body "Changes from repo-public merged."
-        env:
-          GITHUB_TOKEN: ${{ secrets.GIT_TOKEN }}  # GitHub token for authentication
+    - name: Checkout code
+      uses: actions/checkout@v2
+      
+    - name: Create PR in repo-private
+      uses: peter-evans/create-pull-request@v3
+      with:
+        token: ${{ secrets.GIT_TOKEN }}
+        branch: main  # Branch where changes are pushed
+        title: 'Merge from repo-public'
+        body: 'This PR is automatically created from repo-public.'
+        base: main  # Base branch in repo-private where PR will be created
+        branch-suffix: '-public-merge'  # Suffix for the branch name in repo-private
