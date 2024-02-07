@@ -1,43 +1,22 @@
-name: Sync Public to Private
+name: Auto-Merge to Private Repo
 
 on:
   push:
     branches:
-      - main
+      - main  # Adjust the branch name as needed
 
 jobs:
-  sync:
+  auto-merge:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout Repo-Public
+      - name: Checkout code
         uses: actions/checkout@v2
-        with:
-          repository: Anandaraj-SF4202/repo-public
-          ref: main
 
-      - name: Create Pull Request
-        uses: peter-evans/create-pull-request@v3
-        with:
-          token: ${{ secrets.GIT_TOKEN }}
-          branch: main
-          title: "Sync changes from Repo-Public"
-          body: "Automatically synced changes from Repo-Public."
-          base: main
-          head: Anandaraj-SF4202:main
-          labels: "sync"
-
-      - name: Checkout Repo-Private
-        uses: actions/checkout@v2
-        with:
-          repository: Anandaraj-SF4202/repo-private
-          ref: main
-
-      - name: Apply Changes
+      - name: Create pull request in repo-private
         run: |
-          # Copy files from Repo-Public to Repo-Private
-          cp -r ${{ github.workspace }}/repo-public/* ${{ github.workspace }}/repo-private/
-          cd ${{ github.workspace }}/repo-private/
-          git add .
-          git commit -m "Sync changes from Repo-Public"
-          git push
+          # Use GitHub CLI or API to create a pull request in repo-private
+          # Example:
+          gh pr create --base main --head main --title "Auto-Merge from repo-public" --body "Changes from repo-public merged."
+        env:
+          GITHUB_TOKEN: ${{ secrets.GIT_TOKEN }}  # GitHub token for authentication
