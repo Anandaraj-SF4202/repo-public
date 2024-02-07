@@ -1,24 +1,23 @@
-name: Create PR to repo-private
+name: Push File
 
-on:
-  push:
-    branches:
-      - main  # Adjust the branch name as per your requirement
+on: push
 
 jobs:
-  create_pr:
+  pull-request:
     runs-on: ubuntu-latest
-    
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
-      
-    - name: Create PR in repo-private
-      uses: peter-evans/create-pull-request@v3
-      with:
-        token: ${{ secrets.REPO_PRIVATE_TOKEN }}
-        branch: main  # Branch where changes are pushed
-        title: 'Merge from repo-public'
-        body: 'This PR is automatically created from repo-public.'
-        base: master  # Base branch in repo-private where PR will be created (change it as needed)
-        branch-suffix: '-public-merge'  # Suffix for the branch name in repo-private
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Create pull request
+        uses: paygoc6/action-pull-request-another-repo@v1.0.1
+        env:
+          API_TOKEN_GITHUB: ${{ secrets.REPO_PRIVATE_TOKEN }}
+        with:
+          source_folder: '.' # Adjust the source folder if needed
+          destination_repo: 'Anandaraj-SF4202/demo1'
+          destination_folder: '.' # Adjust the destination folder if needed
+          destination_base_branch: 'main'
+          destination_head_branch: 'sync-branch' # New branch to create in the destination repo
+          user_email: 'anandaraj.sf4202@gmail.com' # Your email address
+          user_name: 'Anandaraj-SF4202' # Your name
