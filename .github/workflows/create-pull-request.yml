@@ -6,14 +6,38 @@ on:
       - main
 
 jobs:
-  dispatch:
+  sync:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Dispatch Sync Event
-        uses: peter-evans/repository-dispatch@v1
+      - name: Checkout Repo-Public
+        uses: actions/checkout@v2
         with:
-          token: ${{ secrets.PRIVATE_REPO_PAT }}
+          repository: Anandaraj-SF4202/repo-public
+          ref: main
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v3
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          branch: main
+          title: "Sync changes from Repo-Public"
+          body: "Automatically synced changes from Repo-Public."
+          base: main
+          head: Anandaraj-SF4202:main
+          labels: "sync"
+
+      - name: Checkout Repo-Private
+        uses: actions/checkout@v2
+        with:
           repository: Anandaraj-SF4202/repo-private
-          event-type: sync-changes
-          client-payload: '{"source_repo": "Anandaraj-SF4202/repo-public"}'
+          ref: main
+
+      - name: Apply Changes
+        run: |
+          # Copy files from Repo-Public to Repo-Private
+          cp -r ${{ github.workspace }}/repo-public/* ${{ github.workspace }}/repo-private/
+          cd ${{ github.workspace }}/repo-private/
+          git add .
+          git commit -m "Sync changes from Repo-Public"
+          git push
