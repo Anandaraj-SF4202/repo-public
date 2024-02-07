@@ -16,9 +16,9 @@ jobs:
     - name: Create PR in repo-private
       uses: peter-evans/create-pull-request@v3
       with:
-        token: ${{ secrets.GIT_TOKEN }}
+        token: ${{ secrets.REPO_PRIVATE_TOKEN }}
         branch: main  # Branch where changes are pushed
         title: 'Merge from repo-public'
         body: 'This PR is automatically created from repo-public.'
-        base: main  # Base branch in repo-private where PR will be created
+        base: master  # Base branch in repo-private where PR will be created (change it as needed)
         branch-suffix: '-public-merge'  # Suffix for the branch name in repo-private
